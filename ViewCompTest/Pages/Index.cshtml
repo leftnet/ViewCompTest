@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var url = Url.Page("Index", "ViewComponent");
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<label for="numCount">Guids: </label>
+<input type="number" min="1" max="1000" id="numCount" value="50" step="1"/>
+<button id="btnUpdate" type="button">Update with # Guids</button>
+
+<div id="panel">
+    @await Component.InvokeAsync("TestComponent", new { count = 50})
+</div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        document.querySelector("#btnUpdate").addEventListener("click", async function(e) {
+            const count = document.querySelector("#numCount").value;
+            
+            await fetch(`@(url)&count=${count}`)
+                .then(response => response.text())
+                .then(data => document.querySelector('#panel').innerHTML = data)
+                .catch(error => console.error(error));
+        }, false);
+    });
+</script>
